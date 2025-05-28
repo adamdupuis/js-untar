@@ -28,7 +28,7 @@
   },
   "homepage": "https://github.com/InvokIT/js-untar",
   "devDependencies": {
-    "gulp": "^3.9.0",
+    "gulp": "^4.0.2",
     "gulp-add-src": "^0.2.0",
     "gulp-concat": "^2.6.0",
     "gulp-filter": "^3.0.1",
@@ -46,6 +46,9 @@
     "karma-jasmine": "^0.3.6",
     "karma-requirejs": "^0.2.2",
     "lodash": "^4.0.1",
-    "requirejs": "^2.1.20"
+    "merge-stream": "^2.0.0",
+    "requirejs": "^2.1.20",
+    "through2": "^4.0.2",
+    "vinyl": "^3.0.0"
   }
 }
