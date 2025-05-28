@@ -82,7 +82,7 @@ define(["untar-worker"], function() {
 					var buf = fileReader.result;
 					s = new UntarStream(buf);
 					done();
-				};	
+				};
 
 				fileReader.readAsArrayBuffer(blob);
 			});
@@ -150,7 +150,7 @@ define(["untar-worker"], function() {
 
 					if (i > fileNames.length) fail("i > fileNames.length");
 				}
-				
+
 			});
 
 			it("should extract the correct content", function() {
@@ -159,20 +159,18 @@ define(["untar-worker"], function() {
 						return "";
 					}
 
-					//console.log("readString: position " + this.position() + ", " + charCount + " chars");
-					var charCount = buffer.byteLength;
-					var charSize = 1;
-					var byteCount = charCount * charSize;
-					var bufferView = new DataView(buffer);
+					// Decode the buffer using UTF-8
+					var bytes = new Uint8Array(buffer);
+					var decoder = new TextDecoder("utf-8");
+					var str = decoder.decode(bytes);
 
-					var charCodes = [];
-
-					for (var i = 0; i < charCount; ++i) {
-						var charCode = bufferView.getUint8(i * charSize, true);
-						charCodes.push(charCode);
+					// Optionally strip null terminator
+					const nullPos = str.indexOf('\0');
+					if (nullPos !== -1) {
+						str = str.substring(0, nullPos);
 					}
 
-					return String.fromCharCode.apply(null, charCodes);
+					return str;
 				}
 
 

@@ -180,24 +180,27 @@ function UntarStream(arrayBuffer) {
 
 UntarStream.prototype = {
 	readString: function(charCount) {
-		//console.log("readString: position " + this.position() + ", " + charCount + " chars");
-		var charSize = 1;
-		var byteCount = charCount * charSize;
+		// Calculate byte range
+		var start = this.position();
+		var end = start + charCount;
 
-		var charCodes = [];
+		// Create a Uint8Array view over the bytes to decode
+		var bytes = new Uint8Array(this._bufferView.buffer, this._bufferView.byteOffset + start, charCount);
 
-		for (var i = 0; i < charCount; ++i) {
-			var charCode = this._bufferView.getUint8(this.position() + (i * charSize), true);
-			if (charCode !== 0) {
-				charCodes.push(charCode);
-			} else {
-				break;
-			}
+		// Decode using UTF-8
+		var decoder = new TextDecoder("utf-8");
+		var str = decoder.decode(bytes);
+
+		// Strip null terminator if present
+		const nullPos = str.indexOf('\0');
+		if (nullPos !== -1) {
+			str = str.substring(0, nullPos);
 		}
 
-		this.seek(byteCount);
+		// Advance the read position
+		this.seek(charCount);
 
-		return String.fromCharCode.apply(null, charCodes);
+		return str;
 	},
 
 	readBuffer: function(byteCount) {

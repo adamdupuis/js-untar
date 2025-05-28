@@ -72,18 +72,15 @@ var decoratedFileProps = {
 		value: function() {
 			var buffer = this.buffer;
 			var charCount = buffer.byteLength;
-			var charSize = 1;
-			var byteCount = charCount * charSize;
-			var bufferView = new DataView(buffer);
 
-			var charCodes = [];
+			// Create a Uint8Array view over the buffer
+			var bytes = new Uint8Array(buffer, 0, charCount);
 
-			for (var i = 0; i < charCount; ++i) {
-				var charCode = bufferView.getUint8(i * charSize, true);
-				charCodes.push(charCode);
-			}
+			// Decode using UTF-8
+			var decoder = new TextDecoder("utf-8");
+			var str = decoder.decode(bytes);
 
-			return (this._string = String.fromCharCode.apply(null, charCodes));
+			return (this._string = str);
 		}
 	},
 	readAsJSON: {
